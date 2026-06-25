@@ -3,6 +3,7 @@
 import { useMemo, useSyncExternalStore } from 'react';
 import PosterCard from '@/components/PosterCard';
 import { continueWatchingKey, clearProgress, subscribeContinueWatching, type ResumeItem } from '@/lib/resume';
+import { buildImageUrlClient } from '@/lib/image-url';
 import type { Profile } from '@/types/catalog';
 
 export default function ContinueWatching({ profile }: { profile: Profile }) {
@@ -22,6 +23,9 @@ export default function ContinueWatching({ profile }: { profile: Profile }) {
     }
   }, [raw]);
 
+  // Get origin once (for image proxying).
+  const origin = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000';
+
   if (items.length === 0) return null;
 
   return (
@@ -33,7 +37,7 @@ export default function ContinueWatching({ profile }: { profile: Profile }) {
             <PosterCard
               href={`/watch/${item.id}`}
               title={item.name}
-              imageUrl={item.logoUrl}
+              imageUrl={buildImageUrlClient(item.logoUrl, origin)}
               progress={item.duration ? item.time / item.duration : 0}
             />
             <button

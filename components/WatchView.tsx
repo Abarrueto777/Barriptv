@@ -62,7 +62,7 @@ export default function WatchView({ initial, channels, initialIndex, profile }: 
   }
 
   return (
-    <div className="mx-auto h-full max-w-5xl overflow-y-auto px-4 py-6 sm:px-8 sm:py-8">
+    <div className="mx-auto max-w-5xl px-4 py-6 sm:px-8 sm:py-8">
       <BackButton />
       <div className="overflow-hidden rounded-2xl border border-white/10 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.7)]">
         <VideoPlayer

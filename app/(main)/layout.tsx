@@ -28,7 +28,7 @@ export default async function MainLayout({ children }: { children: React.ReactNo
           Tu suscripción vence {daysLeft === 0 ? 'hoy' : daysLeft === 1 ? 'mañana' : `en ${daysLeft} días`}. Contactá al administrador para renovarla.
         </div>
       )}
-      <main className="min-h-0 flex-1 overflow-hidden">{children}</main>
+      <main className="min-h-0 flex-1 overflow-y-auto" style={{ scrollbarGutter: 'stable' }}>{children}</main>
     </div>
   );
 }
