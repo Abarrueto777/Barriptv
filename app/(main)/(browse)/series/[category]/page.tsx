@@ -1,8 +1,10 @@
 import { notFound } from 'next/navigation';
+import { headers } from 'next/headers';
 import CategoryBrowser from '@/components/CategoryBrowser';
 import RememberCategory from '@/components/RememberCategory';
 import { listSeriesShows } from '@/lib/catalog-queries';
 import { getKidsFilter } from '@/lib/profile';
+import { buildImageUrl } from '@/lib/image-url';
 
 export default async function SeriesCategoryPage({ params }: { params: Promise<{ category: string }> }) {
   const { category } = await params;
@@ -19,6 +21,11 @@ export default async function SeriesCategoryPage({ params }: { params: Promise<{
     notFound();
   }
 
+  const headersList = await headers();
+  const host = headersList.get('x-forwarded-host') || headersList.get('host') || 'localhost:3000';
+  const proto = headersList.get('x-forwarded-proto') || 'http';
+  const origin = `${proto}://${host}`;
+
   return (
     <>
       <RememberCategory section="series" category={groupTitle} />
@@ -29,7 +36,7 @@ export default async function SeriesCategoryPage({ params }: { params: Promise<{
           id: show.seriesName,
           href: `/series/show/${encodeURIComponent(show.seriesName)}`,
           title: show.seriesName,
-          imageUrl: show.logoUrl,
+          imageUrl: buildImageUrl(show.logoUrl, origin),
           subtitle: `${show.episodeCount} episodios`,
         }))}
       />
