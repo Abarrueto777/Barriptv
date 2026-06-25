@@ -1,26 +1,83 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --color-accent: #22d3ee;
+  --color-accent-2: #a855f7;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  color-scheme: dark;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: #ededed;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  background-color: #07060d;
+}
+
+/* Fixed futuristic gradient mesh behind everything */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(60rem 60rem at 12% -10%, rgba(168, 85, 247, 0.18), transparent 60%),
+    radial-gradient(55rem 55rem at 110% 10%, rgba(34, 211, 238, 0.14), transparent 55%),
+    radial-gradient(50rem 50rem at 50% 120%, rgba(99, 102, 241, 0.12), transparent 60%),
+    #07060d;
+}
+
+/* Reusable glass surface */
+.glass {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-hover:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+/* Accent gradient text (logo, headings) */
+.accent-text {
+  background: linear-gradient(120deg, var(--color-accent), var(--color-accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.accent-glow {
+  box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.5), 0 0 24px -4px rgba(34, 211, 238, 0.45);
+}
+
+/* Thin custom scrollbar for the sidebar */
+.thin-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.thin-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+}
+.thin-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.4s ease-out both;
 }
