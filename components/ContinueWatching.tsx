@@ -31,9 +31,9 @@ export default function ContinueWatching({ profile }: { profile: Profile }) {
   return (
     <section className="mt-12 w-full">
       <h2 className="mb-3 text-lg font-semibold text-zinc-200">Continuar viendo</h2>
-      <div className="flex gap-4 overflow-x-auto pb-2">
+      <div className="flex gap-4 overflow-x-auto overflow-y-visible py-2">
         {items.map((item) => (
-          <div key={item.id} className="relative">
+          <div key={item.id} className="relative shrink-0">
             <PosterCard
               href={`/watch/${item.id}`}
               title={item.name}
