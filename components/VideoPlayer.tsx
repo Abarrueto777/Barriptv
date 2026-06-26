@@ -10,8 +10,9 @@ interface VideoPlayerProps {
   streamUrl: string;
   title: string;
   kind?: StreamKind;
-  /** When set (VOD only), playback position is remembered and resumed (scoped to this profile). */
+  /** When set (VOD only), playback position is remembered and resumed (scoped to userId + profile). */
   resume?: ResumeMeta;
+  userId?: number;
   profile?: Profile;
   /** Show a brief on-screen channel-name banner when the source changes (live TV zapping). */
   channelOsd?: boolean;
@@ -31,7 +32,7 @@ function formatTime(seconds: number): string {
   return h > 0 ? `${h}:${pad(m)}:${pad(s)}` : `${m}:${pad(s)}`;
 }
 
-export default function VideoPlayer({ streamUrl, title, kind = 'file', resume, profile = 'adults', channelOsd = false }: VideoPlayerProps) {
+export default function VideoPlayer({ streamUrl, title, kind = 'file', resume, userId = 1, profile = 'adults', channelOsd = false }: VideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [error, setError] = useState(false);
@@ -108,7 +109,7 @@ export default function VideoPlayer({ streamUrl, title, kind = 'file', resume, p
     let lastSaved = 0;
     const onLoadedMeta = () => {
       if (!resume) return;
-      const p = getProgress(profile, resume.id);
+      const p = getProgress(userId, profile, resume.id);
       if (p && p.time > 0 && (!video.duration || p.time < video.duration - 30)) {
         video.currentTime = p.time;
         setResumedFrom(p.time);
@@ -119,11 +120,11 @@ export default function VideoPlayer({ streamUrl, title, kind = 'file', resume, p
       const now = video.currentTime;
       if (Math.abs(now - lastSaved) >= 5) {
         lastSaved = now;
-        saveProgress(profile, resume, now, video.duration);
+        saveProgress(userId, profile, resume, now, video.duration);
       }
     };
     const onEnded = () => {
-      if (resume) clearProgress(profile, resume.id);
+      if (resume) clearProgress(userId, profile, resume.id);
     };
     if (resume) {
       video.addEventListener('loadedmetadata', onLoadedMeta);
@@ -212,7 +213,7 @@ export default function VideoPlayer({ streamUrl, title, kind = 'file', resume, p
     return () => {
       cancelled = true;
       if (resume && video.duration) {
-        saveProgress(profile, resume, video.currentTime, video.duration);
+        saveProgress(userId, profile, resume, video.currentTime, video.duration);
       }
       video.removeEventListener('playing', onPlaying);
       video.removeEventListener('error', onVideoError);
@@ -222,7 +223,7 @@ export default function VideoPlayer({ streamUrl, title, kind = 'file', resume, p
       if (hls) hls.destroy();
       if (mpegtsPlayer) mpegtsPlayer.destroy();
     };
-  }, [streamUrl, kind, resume, profile]);
+  }, [streamUrl, kind, resume, userId, profile]);
 
   // Auto-hide the resume banner after 10s.
   useEffect(() => {
@@ -235,7 +236,7 @@ export default function VideoPlayer({ streamUrl, title, kind = 'file', resume, p
     const video = videoRef.current;
     if (!video) return;
     video.currentTime = 0;
-    if (resume) clearProgress(profile, resume.id);
+    if (resume) clearProgress(userId, profile, resume.id);
     setResumedFrom(null);
     Promise.resolve(video.play()).catch(() => {});
   }

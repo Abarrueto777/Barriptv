@@ -1,11 +1,12 @@
 import Link from 'next/link';
 import { getCatalogStats } from '@/lib/catalog-queries';
 import ContinueWatching from '@/components/ContinueWatching';
-import { getActiveProfile } from '@/lib/profile';
+import { getActiveProfile, getActiveUserId } from '@/lib/profile';
 
 export default async function HomePage() {
   const stats = getCatalogStats();
   const profile = (await getActiveProfile()) ?? 'adults';
+  const userId = (await getActiveUserId()) ?? 1;
   const isKids = profile === 'kids';
 
   const sections = [
@@ -64,7 +65,7 @@ export default async function HomePage() {
         <p className="mt-3 text-zinc-400">Elegí qué querés ver</p>
       </div>
 
-      <ContinueWatching profile={profile} />
+      <ContinueWatching userId={userId} profile={profile} />
 
       <div className="mt-12 grid w-full gap-6 sm:grid-cols-3">
         {sections.map((section, i) => (

@@ -6,8 +6,8 @@ import { continueWatchingKey, clearProgress, subscribeContinueWatching, type Res
 import { buildImageUrlClient } from '@/lib/image-url';
 import type { Profile } from '@/types/catalog';
 
-export default function ContinueWatching({ profile }: { profile: Profile }) {
-  const key = continueWatchingKey(profile);
+export default function ContinueWatching({ userId, profile }: { userId: number; profile: Profile }) {
+  const key = continueWatchingKey(userId, profile);
   // Read localStorage the SSR-safe way: stable string snapshot, '' on the server.
   const raw = useSyncExternalStore(
     subscribeContinueWatching,
@@ -41,7 +41,7 @@ export default function ContinueWatching({ profile }: { profile: Profile }) {
               progress={item.duration ? item.time / item.duration : 0}
             />
             <button
-              onClick={() => clearProgress(profile, item.id)}
+              onClick={() => clearProgress(userId, profile, item.id)}
               aria-label="Quitar de continuar viendo"
               className="absolute right-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-black/70 text-sm text-white opacity-80 transition hover:bg-red-600 hover:opacity-100"
             >

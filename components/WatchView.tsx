@@ -28,10 +28,11 @@ interface WatchViewProps {
   initial: WatchSource;
   channels: Channel[];
   initialIndex: number;
+  userId: number;
   profile: Profile;
 }
 
-export default function WatchView({ initial, channels, initialIndex, profile }: WatchViewProps) {
+export default function WatchView({ initial, channels, initialIndex, userId, profile }: WatchViewProps) {
   const [current, setCurrent] = useState<WatchSource>(initial);
   const [index, setIndex] = useState(initialIndex);
   const [loading, setLoading] = useState(false);
@@ -74,6 +75,7 @@ export default function WatchView({ initial, channels, initialIndex, profile }: 
           streamUrl={current.url}
           title={current.name}
           kind={current.kind}
+          userId={userId}
           profile={profile}
           channelOsd={isLive}
           resume={

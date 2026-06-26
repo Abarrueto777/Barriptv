@@ -61,5 +61,5 @@ export default async function WatchPage({ params }: { params: Promise<{ id: stri
     initialIndex = Math.max(0, channels.findIndex((c) => c.id === entry.id));
   }
 
-  return <WatchView initial={initial} channels={channels} initialIndex={initialIndex} profile={profile} />;
+  return <WatchView initial={initial} channels={channels} initialIndex={initialIndex} userId={user.id} profile={profile} />;
 }

@@ -9,6 +9,11 @@ export async function getActiveProfile(): Promise<Profile | null> {
   return session.profile ?? null;
 }
 
+export async function getActiveUserId(): Promise<number | null> {
+  const session = await getSession();
+  return session.userId ?? null;
+}
+
 export function getKidsCategorySet(): Set<string> {
   return new Set(getKidsCategories());
 }
