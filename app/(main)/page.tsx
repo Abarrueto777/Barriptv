@@ -48,7 +48,7 @@ export default async function HomePage() {
   ];
 
   return (
-    <div className="mx-auto flex h-full max-w-5xl flex-col items-center justify-center overflow-y-auto px-4 py-8 sm:px-6 sm:py-12">
+    <div className="mx-auto flex h-full max-w-5xl flex-col items-center justify-start overflow-y-auto px-4 py-8 sm:px-6 sm:py-12">
       <div className="animate-fade-in-up text-center">
         <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
           {isKids ? (

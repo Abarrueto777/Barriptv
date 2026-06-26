@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import SearchBar from '@/components/SearchBar';
 import PosterGrid from '@/components/PosterGrid';
+import { buildImageUrlClient } from '@/lib/image-url';
 import type { CatalogEntry } from '@/types/catalog';
 import type { SeriesShow } from '@/lib/catalog-queries';
 
@@ -20,6 +21,8 @@ export default function SearchPage() {
   const [entries, setEntries] = useState<CatalogEntry[]>([]);
   const [shows, setShows] = useState<SeriesShow[]>([]);
   const [loading, setLoading] = useState(false);
+
+  const origin = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000';
 
   const hasQuery = query.trim() !== '';
 
@@ -84,14 +87,14 @@ export default function SearchPage() {
                 id: show.seriesName,
                 href: `/series/show/${encodeURIComponent(show.seriesName)}`,
                 title: show.seriesName,
-                imageUrl: show.logoUrl,
+                imageUrl: buildImageUrlClient(show.logoUrl, origin),
                 subtitle: `${show.episodeCount} episodios`,
               }))
             : visibleEntries.map((entry) => ({
                 id: entry.id,
                 href: `/watch/${entry.id}`,
                 title: entry.name,
-                imageUrl: entry.logoUrl,
+                imageUrl: buildImageUrlClient(entry.logoUrl, origin),
               }))
         }
       />
