@@ -26,6 +26,9 @@ export default function UsersAdmin() {
   const [noExpiry, setNoExpiry] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [changingPasswordId, setChangingPasswordId] = useState<number | null>(null);
+  const [newPassword, setNewPassword] = useState('');
+  const [changingBusy, setChangingBusy] = useState(false);
 
   async function load() {
     const res = await fetch('/api/admin/users');
@@ -84,6 +87,23 @@ export default function UsersAdmin() {
     if (!confirm(`¿Eliminar al usuario "${name}"?`)) return;
     await fetch(`/api/admin/users/${id}`, { method: 'DELETE' });
     await load();
+  }
+
+  async function changePassword() {
+    if (!newPassword.trim() || changingPasswordId === null) return;
+    setChangingBusy(true);
+    try {
+      await fetch(`/api/admin/users/${changingPasswordId}/password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ newPassword: newPassword.trim() }),
+      });
+      setNewPassword('');
+      setChangingPasswordId(null);
+      await load();
+    } finally {
+      setChangingBusy(false);
+    }
   }
 
   if (!users) return null;
@@ -152,6 +172,12 @@ export default function UsersAdmin() {
 
             {u.role !== 'admin' && (
               <div className="ml-auto flex items-center gap-2">
+                <button
+                  onClick={() => setChangingPasswordId(u.id)}
+                  className="rounded-lg bg-cyan-600/20 px-2 py-1 text-xs text-cyan-300 hover:bg-cyan-600/40"
+                >
+                  🔑 Contraseña
+                </button>
                 <button onClick={() => patch(u.id, { action: 'extend', days: 30 })} className="rounded-lg bg-white/10 px-2 py-1 text-xs text-white hover:bg-white/20">
                   +30 días
                 </button>
@@ -169,6 +195,44 @@ export default function UsersAdmin() {
           </div>
         ))}
       </div>
+
+      {/* Change Password Modal */}
+      {changingPasswordId !== null && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+          <div className="glass rounded-2xl p-6 max-w-sm w-full mx-4">
+            <h3 className="mb-4 font-semibold text-white">Cambiar contraseña</h3>
+            <p className="mb-4 text-sm text-zinc-400">
+              Ingresa la nueva contraseña para el usuario <strong>{users.find((u) => u.id === changingPasswordId)?.username}</strong>
+            </p>
+            <input
+              type="password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              placeholder="Nueva contraseña"
+              autoFocus
+              className="mb-4 w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm text-white outline-none focus:border-cyan-400/60"
+            />
+            <div className="flex gap-2">
+              <button
+                onClick={changePassword}
+                disabled={changingBusy || !newPassword.trim()}
+                className="flex-1 rounded-xl bg-gradient-to-r from-cyan-500 to-violet-500 px-4 py-2 text-sm font-semibold text-white transition hover:opacity-90 disabled:opacity-50"
+              >
+                {changingBusy ? 'Cambiando...' : 'Cambiar'}
+              </button>
+              <button
+                onClick={() => {
+                  setChangingPasswordId(null);
+                  setNewPassword('');
+                }}
+                className="flex-1 rounded-xl border border-white/10 px-4 py-2 text-sm text-zinc-300 transition hover:bg-white/5"
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

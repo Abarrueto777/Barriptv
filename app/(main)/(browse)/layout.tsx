@@ -1,9 +1,9 @@
 import Sidebar from '@/components/Sidebar';
 import { getCategories, getSeriesCategories, type CategoryCount } from '@/lib/catalog-queries';
-import { getKidsFilter } from '@/lib/profile';
+import { getActiveProfileFilter } from '@/lib/profile';
 
 export default async function BrowseLayout({ children }: { children: React.ReactNode }) {
-  const filter = await getKidsFilter();
+  const filter = await getActiveProfileFilter();
   const apply = (cats: CategoryCount[]) =>
     filter ? cats.filter((c) => filter.has(c.groupTitle)) : cats;
 

@@ -10,6 +10,7 @@ export interface User {
   expiresAt: number | null;
   disabled: boolean;
   createdAt: number;
+  category_group_id: number | null;
 }
 
 interface UserRow {
@@ -20,6 +21,7 @@ interface UserRow {
   expires_at: number | null;
   disabled: number;
   created_at: number;
+  category_group_id: number | null;
 }
 
 const DAY_MS = 86_400_000;
@@ -32,6 +34,7 @@ function rowToUser(row: UserRow): User {
     expiresAt: row.expires_at,
     disabled: row.disabled === 1,
     createdAt: row.created_at,
+    category_group_id: row.category_group_id,
   };
 }
 
@@ -92,6 +95,14 @@ export function setDisabled(id: number, disabled: boolean) {
 
 export function deleteUser(id: number) {
   getDb().prepare('DELETE FROM users WHERE id = ?').run(id);
+}
+
+export function setUserCategoryGroup(userId: number, groupId: number | null) {
+  getDb().prepare('UPDATE users SET category_group_id = ? WHERE id = ?').run(groupId, userId);
+}
+
+export function changeUserPassword(userId: number, newPassword: string) {
+  getDb().prepare('UPDATE users SET password_hash = ? WHERE id = ?').run(hashPassword(newPassword), userId);
 }
 
 export type VerifyResult =

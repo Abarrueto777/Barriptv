@@ -3,7 +3,7 @@ import { listSeriesEpisodes } from '@/lib/catalog-queries';
 import { notFound } from 'next/navigation';
 import BackButton from '@/components/BackButton';
 import ScrollArea from '@/components/ScrollArea';
-import { getKidsFilter } from '@/lib/profile';
+import { getActiveProfileFilter } from '@/lib/profile';
 
 export default async function SeriesShowPage({ params }: { params: Promise<{ name: string }> }) {
   const { name } = await params;
@@ -14,7 +14,7 @@ export default async function SeriesShowPage({ params }: { params: Promise<{ nam
     notFound();
   }
 
-  const filter = await getKidsFilter();
+  const filter = await getActiveProfileFilter();
   if (filter && !filter.has(episodes[0].groupTitle)) {
     notFound();
   }

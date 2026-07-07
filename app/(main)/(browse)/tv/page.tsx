@@ -1,10 +1,10 @@
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { getCategories, resolveDefaultCategory } from '@/lib/catalog-queries';
-import { getKidsFilter } from '@/lib/profile';
+import { getActiveProfileFilter } from '@/lib/profile';
 
 export default async function TvPage() {
-  const filter = await getKidsFilter();
+  const filter = await getActiveProfileFilter();
   const categories = getCategories('tv').filter((c) => !filter || filter.has(c.groupTitle));
 
   if (categories.length === 0) {

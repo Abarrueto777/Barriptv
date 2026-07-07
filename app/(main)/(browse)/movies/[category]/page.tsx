@@ -3,14 +3,14 @@ import { headers } from 'next/headers';
 import CategoryBrowser from '@/components/CategoryBrowser';
 import RememberCategory from '@/components/RememberCategory';
 import { listEntries } from '@/lib/catalog-queries';
-import { getKidsFilter } from '@/lib/profile';
+import { getActiveProfileFilter } from '@/lib/profile';
 import { buildImageUrl } from '@/lib/image-url';
 
 export default async function MoviesCategoryPage({ params }: { params: Promise<{ category: string }> }) {
   const { category } = await params;
   const groupTitle = decodeURIComponent(category);
 
-  const filter = await getKidsFilter();
+  const filter = await getActiveProfileFilter();
   if (filter && !filter.has(groupTitle)) {
     notFound();
   }

@@ -41,11 +41,20 @@ CREATE TABLE IF NOT EXISTS settings (
 );
 
 CREATE TABLE IF NOT EXISTS users (
+  id                  INTEGER PRIMARY KEY AUTOINCREMENT,
+  username            TEXT NOT NULL UNIQUE COLLATE NOCASE,
+  password_hash       TEXT NOT NULL,
+  role                TEXT NOT NULL DEFAULT 'user' CHECK (role IN ('admin','user')),
+  expires_at          INTEGER,
+  disabled            INTEGER NOT NULL DEFAULT 0,
+  category_group_id   INTEGER,
+  created_at          INTEGER NOT NULL,
+  FOREIGN KEY (category_group_id) REFERENCES category_groups(id)
+);
+
+CREATE TABLE IF NOT EXISTS category_groups (
   id            INTEGER PRIMARY KEY AUTOINCREMENT,
-  username      TEXT NOT NULL UNIQUE COLLATE NOCASE,
-  password_hash TEXT NOT NULL,
-  role          TEXT NOT NULL DEFAULT 'user' CHECK (role IN ('admin','user')),
-  expires_at    INTEGER,
-  disabled      INTEGER NOT NULL DEFAULT 0,
+  name          TEXT NOT NULL UNIQUE,
+  categories    TEXT NOT NULL,
   created_at    INTEGER NOT NULL
 );

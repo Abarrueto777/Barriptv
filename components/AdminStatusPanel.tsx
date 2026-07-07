@@ -4,6 +4,8 @@ import { useState } from 'react';
 import AdminUploadForm from '@/components/AdminUploadForm';
 import AdminUrlForm from '@/components/AdminUrlForm';
 import KidsConfig from '@/components/KidsConfig';
+import AdultsConfig from '@/components/AdultsConfig';
+import CategoryGroupsConfig from '@/components/CategoryGroupsConfig';
 import UsersAdmin from '@/components/UsersAdmin';
 import type { IngestLogEntry, IngestResult } from '@/types/catalog';
 
@@ -74,6 +76,10 @@ export default function AdminStatusPanel({ initialStatus }: { initialStatus: Sta
       </div>
 
       <KidsConfig />
+
+      <AdultsConfig />
+
+      <CategoryGroupsConfig />
 
       <UsersAdmin />
     </div>

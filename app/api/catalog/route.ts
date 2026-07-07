@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { listEntries, listSeriesShows, listSeriesEpisodes } from '@/lib/catalog-queries';
-import { getKidsFilter } from '@/lib/profile';
+import { getActiveProfileFilter } from '@/lib/profile';
 
 export async function GET(request: NextRequest) {
   const params = request.nextUrl.searchParams;
@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
   const page = params.get('page') ? Number(params.get('page')) : undefined;
   const pageSize = params.get('pageSize') ? Number(params.get('pageSize')) : undefined;
 
-  const filter = await getKidsFilter();
+  const filter = await getActiveProfileFilter();
   const allowed = <T extends { groupTitle: string }>(rows: T[]) =>
     filter ? rows.filter((r) => filter.has(r.groupTitle)) : rows;
 

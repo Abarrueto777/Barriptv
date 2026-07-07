@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getEntryById } from '@/lib/catalog-queries';
 import { resolveLiveStream } from '@/lib/resolve-stream';
-import { getKidsFilter } from '@/lib/profile';
+import { getActiveProfileFilter } from '@/lib/profile';
 import { getCurrentUser } from '@/lib/auth';
 import { buildPlayUrl } from '@/lib/stream-url';
 import type { StreamKind } from '@/types/catalog';
@@ -18,8 +18,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
   }
 
-  // Kids profile must not reach a non-allowed category, even via this endpoint.
-  const filter = await getKidsFilter();
+  // Active profile must not reach a non-allowed category, even via this endpoint.
+  const filter = await getActiveProfileFilter();
   if (filter && !filter.has(entry.groupTitle)) {
     return NextResponse.json({ error: 'forbidden' }, { status: 403 });
   }

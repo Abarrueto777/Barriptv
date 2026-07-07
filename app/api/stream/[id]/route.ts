@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCurrentUser } from '@/lib/auth';
 import { getEntryById } from '@/lib/catalog-queries';
-import { getKidsFilter } from '@/lib/profile';
+import { getActiveProfileFilter } from '@/lib/profile';
 import { getUserById, userStatus } from '@/lib/users';
 import { verifyStreamToken } from '@/lib/stream-token';
 import { acquireSlot, releaseSlot } from '@/lib/stream-slots';
@@ -51,10 +51,10 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     return NextResponse.json({ error: 'not-found' }, { status: 404 });
   }
 
-  // Kids profile must not reach a non-allowed category via the cookie path. The
+  // Active profile must not reach a non-allowed category via the cookie path. The
   // token path was already authorized at mint time, so it is trusted here.
   if (!viaToken) {
-    const filter = await getKidsFilter();
+    const filter = await getActiveProfileFilter();
     if (filter && !filter.has(entry.groupTitle)) {
       return NextResponse.json({ error: 'forbidden' }, { status: 403 });
     }

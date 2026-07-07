@@ -2,7 +2,7 @@ import { notFound, redirect } from 'next/navigation';
 import { headers } from 'next/headers';
 import { getEntryById, isAdultCategory, listEntries } from '@/lib/catalog-queries';
 import { resolveLiveStream } from '@/lib/resolve-stream';
-import { getKidsFilter, getActiveProfile } from '@/lib/profile';
+import { getActiveProfileFilter, getActiveProfile } from '@/lib/profile';
 import { getCurrentUser } from '@/lib/auth';
 import { buildPlayUrl } from '@/lib/stream-url';
 import WatchView, { type WatchSource } from '@/components/WatchView';
@@ -16,7 +16,7 @@ export default async function WatchPage({ params }: { params: Promise<{ id: stri
     notFound();
   }
 
-  const filter = await getKidsFilter();
+  const filter = await getActiveProfileFilter();
   if (filter && !filter.has(entry.groupTitle)) {
     redirect('/');
   }
